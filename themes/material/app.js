@@ -190,6 +190,10 @@ function file(path){
 		return file_video(path);
 	}
 	
+	if("|mkv|".indexOf(`|${ext}|`) >= 0){
+		return file_mkv(path);
+	}
+	
 	if("|mp3|wav|ogg|m4a|".indexOf(`|${ext}|`) >= 0){
 		return file_audio(path);
 	}
@@ -273,6 +277,36 @@ function file_video(path){
 	</div>
 </div>
 <a href="${url}" class="mdui-fab mdui-fab-fixed mdui-ripple mdui-color-theme-accent"><i class="mdui-icon material-icons">file_download</i></a>
+	`;
+	$('#content').html(content);
+}
+
+function failed(e) {
+   // video playback failed - show a message saying why
+   switch (e.target.error.code) {
+     case e.target.error.MEDIA_ERR_ABORTED:
+       alert('You aborted the video playback.');
+       break;
+     case e.target.error.MEDIA_ERR_NETWORK:
+       alert('A network error caused the video download to fail part-way.');
+       break;
+     case e.target.error.MEDIA_ERR_DECODE:
+       alert('The video playback was aborted due to a corruption problem or because the video used features your browser did not support.');
+       break;
+     case e.target.error.MEDIA_ERR_SRC_NOT_SUPPORTED:
+       alert('The video could not be loaded, either because the server or network failed or because the format is not supported.');
+       break;
+     default:
+       alert('An unknown error occurred.');
+       break;
+   }
+}
+
+// 文件展示 视频 |mkv|
+function file_mkv(path){
+	var url = window.location.origin + path;
+	var content = `
+<center><video controls autoplay=true onerror="failed(event)" type='video/x-matroska; codecs="theora, vorbis"' preload=auto style="width:80%;object-fit: cover;" src="' + this.href + '"></video></center>
 	`;
 	$('#content').html(content);
 }
